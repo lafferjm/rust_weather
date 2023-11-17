@@ -54,11 +54,14 @@ fn main() {
                     .unwrap();
             }
 
-            let _forecast =
+            let forecast =
                 weather::get_forecast(&matching_locations[selection]).unwrap_or_else(|_| {
                     eprintln!("Error getting the forecast");
                     process::exit(1);
                 });
+
+            let display = weather::display_forecast(&forecast);
+            println!("{}", display);
         }
     }
 }

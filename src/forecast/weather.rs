@@ -2,16 +2,17 @@ use anyhow;
 use reqwest;
 
 use serde::Deserialize;
+use tabled::{Table, Tabled};
 
 use crate::geolocation;
 
 #[derive(Deserialize)]
 pub struct ForecastResponse {
-    pub daily: DailyForecast,
+    pub daily: DailyForecastResponse,
 }
 
 #[derive(Deserialize)]
-pub struct DailyForecast {
+pub struct DailyForecastResponse {
     pub time: Vec<String>,
     #[serde(alias = "temperature_2m_min")]
     pub min_temp: Vec<f64>,
@@ -19,11 +20,37 @@ pub struct DailyForecast {
     pub max_temp: Vec<f64>,
 }
 
-pub fn get_forecast(location: &geolocation::Locations) -> Result<DailyForecast, anyhow::Error> {
+#[derive(Tabled)]
+struct DailyForecastDisplay {
+    #[tabled(rename = "Day")]
+    day: String,
+    #[tabled(rename = "Min Temp")]
+    min_temp: f64,
+    #[tabled(rename = "Max Temp")]
+    max_temp: f64,
+}
+
+pub fn get_forecast(
+    location: &geolocation::Locations,
+) -> Result<DailyForecastResponse, anyhow::Error> {
     let url = format!("https://api.open-meteo.com/v1/forecast?latitude={}&longitude={}&temperature_unit=fahrenheit&daily=temperature_2m_max,temperature_2m_min",
                       location.latitude, location.longitude,);
 
     let response = reqwest::blocking::get(&url)?.json::<ForecastResponse>()?;
 
     return Ok(response.daily);
+}
+
+pub fn display_forecast(forecast: &DailyForecastResponse) -> String {
+    let mut daily = Vec::new();
+    for i in 0..forecast.time.len() {
+        let forecast_display = DailyForecastDisplay {
+            day: forecast.time[i].clone(),
+            min_temp: forecast.min_temp[i],
+            max_temp: forecast.max_temp[i],
+        };
+        daily.push(forecast_display);
+    }
+
+    return Table::new(&daily).to_string();
 }
