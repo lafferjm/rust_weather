@@ -7,7 +7,7 @@ pub struct GeolocationResponse {
     pub results: Vec<Locations>,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize)]
 pub struct Locations {
     #[serde(alias = "name")]
     pub city: String,

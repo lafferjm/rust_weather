@@ -2,7 +2,7 @@ mod forecast;
 
 use clap::{Args, Parser, Subcommand};
 use dialoguer::Select;
-use forecast::geolocation;
+use forecast::{geolocation, weather};
 use std::process;
 
 #[derive(Parser)]
@@ -54,7 +54,11 @@ fn main() {
                     .unwrap();
             }
 
-            println!("You chose: {:?}", matching_locations[selection]);
+            let _forecast =
+                weather::get_forecast(&matching_locations[selection]).unwrap_or_else(|_| {
+                    eprintln!("Error getting the forecast");
+                    process::exit(1);
+                });
         }
     }
 }
