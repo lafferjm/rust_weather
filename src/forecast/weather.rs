@@ -21,13 +21,13 @@ pub struct DailyForecastResponse {
 }
 
 #[derive(Tabled)]
-struct DailyForecastDisplay {
+struct DailyForecastDisplay<'a> {
     #[tabled(rename = "Day")]
-    day: String,
+    day: &'a str,
     #[tabled(rename = "Min Temp")]
-    min_temp: f64,
+    min_temp: &'a f64,
     #[tabled(rename = "Max Temp")]
-    max_temp: f64,
+    max_temp: &'a f64,
 }
 
 pub fn get_forecast(
@@ -45,9 +45,9 @@ pub fn display_forecast(forecast: &DailyForecastResponse) -> String {
     let mut daily = Vec::new();
     for i in 0..forecast.time.len() {
         let forecast_display = DailyForecastDisplay {
-            day: forecast.time[i].clone(),
-            min_temp: forecast.min_temp[i],
-            max_temp: forecast.max_temp[i],
+            day: &forecast.time[i],
+            min_temp: &forecast.min_temp[i],
+            max_temp: &forecast.max_temp[i],
         };
         daily.push(forecast_display);
     }
