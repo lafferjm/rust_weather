@@ -1,7 +1,7 @@
-use crate::forecast::geolocation;
-use clap::{Args, Parser, Subcommand};
+mod forecast;
 
-pub mod forecast;
+use clap::{Args, Parser, Subcommand};
+use forecast::geolocation;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -27,7 +27,6 @@ fn main() {
     match &cli.command {
         Commands::Forecast(forecast) => {
             geolocation::get_matching_locations(&forecast.city);
-            // println!("You entered city: {:?}", forecast.city)
         }
     }
 }
