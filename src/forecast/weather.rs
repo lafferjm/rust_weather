@@ -7,17 +7,17 @@ use tabled::{Table, Tabled};
 use crate::geolocation;
 
 #[derive(Deserialize)]
-pub struct ForecastResponse {
-    pub daily: DailyForecastResponse,
+struct ForecastResponse {
+    daily: DailyForecastResponse,
 }
 
 #[derive(Deserialize)]
-pub struct DailyForecastResponse {
-    pub time: Vec<String>,
+struct DailyForecastResponse {
+    time: Vec<String>,
     #[serde(alias = "temperature_2m_min")]
-    pub min_temp: Vec<f64>,
+    min_temp: Vec<f64>,
     #[serde(alias = "temperature_2m_max")]
-    pub max_temp: Vec<f64>,
+    max_temp: Vec<f64>,
 }
 
 #[derive(Tabled)]
