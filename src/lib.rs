@@ -33,15 +33,17 @@ pub fn get_args() -> Cli {
 pub fn run(cli: &Cli) {
     match &cli.command {
         Commands::Forecast(forecast) => {
-            let jank = geolocation::get_location(forecast);
-            // let forecast =
-            //     weather::get_forecast(&matching_locations[selection]).unwrap_or_else(|_| {
-            //         eprintln!("Error getting the forecast");
-            //         process::exit(1);
-            //     });
+            let location = geolocation::get_location(forecast).unwrap_or_else(|_| {
+                eprintln!("Error getting the locations");
+                process::exit(1);
+            });
 
-            // let display = weather::display_forecast(&forecast);
-            // println!("{}", display);
+            let forecast = weather::display_forecast(&location).unwrap_or_else(|_| {
+                eprintln!("Error getting the forecast");
+                process::exit(1);
+            });
+
+            println!("{}", forecast);
         }
     }
 }

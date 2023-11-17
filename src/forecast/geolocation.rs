@@ -1,7 +1,7 @@
 use reqwest;
 use serde::Deserialize;
 use dialoguer::Select;
-use std::{fmt, error, process};
+use std::{error, process};
 
 use crate::ForecastArgs;
 
@@ -10,7 +10,7 @@ pub struct GeolocationResponse {
     pub results: Vec<Locations>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct Locations {
     #[serde(alias = "name")]
     pub city: String,

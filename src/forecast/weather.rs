@@ -30,7 +30,7 @@ struct DailyForecastDisplay<'a> {
     max_temp: &'a f64,
 }
 
-pub fn get_forecast(
+fn get_forecast(
     location: &geolocation::Locations,
 ) -> Result<DailyForecastResponse, Box<dyn error::Error>> {
     let url = format!("https://api.open-meteo.com/v1/forecast?latitude={}&longitude={}&temperature_unit=fahrenheit&daily=temperature_2m_max,temperature_2m_min",
@@ -41,16 +41,19 @@ pub fn get_forecast(
     return Ok(response.daily);
 }
 
-pub fn display_forecast(forecast: &DailyForecastResponse) -> String {
-    let mut daily = Vec::new();
-    for i in 0..forecast.time.len() {
-        let forecast_display = DailyForecastDisplay {
-            day: &forecast.time[i],
-            min_temp: &forecast.min_temp[i],
-            max_temp: &forecast.max_temp[i],
-        };
-        daily.push(forecast_display);
-    }
+pub fn display_forecast(location: &geolocation::Locations) -> Result<String, Box<dyn error::Error>> {
+    let forecast = get_forecast(location)?;
 
-    return Table::new(&daily).to_string();
+    let daily: Vec<DailyForecastDisplay> = forecast
+    .time
+    .iter()
+    .zip(forecast.min_temp.iter().zip(forecast.max_temp.iter()))
+    .map(|(day, (min_temp, max_temp))| DailyForecastDisplay {
+        day,
+        min_temp,
+        max_temp,
+    })
+    .collect();
+
+    return Ok(Table::new(&daily).to_string());
 }
