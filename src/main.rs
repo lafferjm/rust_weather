@@ -34,12 +34,9 @@ fn main() {
                     process::exit(1);
                 });
 
-            let mut items = Vec::new();
-
-            for location in matching_locations.iter() {
-                let city_state = format!("{}, {}", location.city, location.state);
-                items.push(city_state);
-            }
+            let location_options: Vec<String> = matching_locations.iter().map(|location|
+                 format!("{}, {}", location.city, location.state)
+            ).collect();
 
             let mut selection = 0;
             if matching_locations.len() == 0 {
@@ -49,7 +46,7 @@ fn main() {
                 selection = Select::new()
                     .with_prompt("Multiple cities found please pick one?")
                     .default(0)
-                    .items(&items)
+                    .items(&location_options)
                     .interact()
                     .unwrap();
             }
