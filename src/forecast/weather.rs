@@ -1,5 +1,5 @@
-use anyhow;
 use reqwest;
+use std::error;
 
 use serde::Deserialize;
 use tabled::{Table, Tabled};
@@ -32,7 +32,7 @@ struct DailyForecastDisplay<'a> {
 
 pub fn get_forecast(
     location: &geolocation::Locations,
-) -> Result<DailyForecastResponse, anyhow::Error> {
+) -> Result<DailyForecastResponse, Box<dyn error::Error>> {
     let url = format!("https://api.open-meteo.com/v1/forecast?latitude={}&longitude={}&temperature_unit=fahrenheit&daily=temperature_2m_max,temperature_2m_min",
                       location.latitude, location.longitude,);
 

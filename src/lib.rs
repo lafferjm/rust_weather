@@ -3,7 +3,6 @@ mod forecast;
 use std::process;
 
 use clap::{Args, Parser, Subcommand};
-use dialoguer::Select;
 use forecast::{geolocation, weather};
 
 #[derive(Parser)]
@@ -34,37 +33,15 @@ pub fn get_args() -> Cli {
 pub fn run(cli: &Cli) {
     match &cli.command {
         Commands::Forecast(forecast) => {
-            let matching_locations = geolocation::get_matching_locations(&forecast.city)
-                .unwrap_or_else(|_| {
-                    eprintln!("Error searching for location");
-                    process::exit(1);
-                });
+            let jank = geolocation::get_location(forecast);
+            // let forecast =
+            //     weather::get_forecast(&matching_locations[selection]).unwrap_or_else(|_| {
+            //         eprintln!("Error getting the forecast");
+            //         process::exit(1);
+            //     });
 
-            let location_options: Vec<String> = matching_locations.iter().map(|location|
-                 format!("{}, {}", location.city, location.state)
-            ).collect();
-
-            let mut selection = 0;
-            if matching_locations.len() == 0 {
-                println!("Unable to locate: {}", forecast.city);
-                process::exit(1);
-            } else if matching_locations.len() > 1 {
-                selection = Select::new()
-                    .with_prompt("Multiple cities found please pick one?")
-                    .default(0)
-                    .items(&location_options)
-                    .interact()
-                    .unwrap();
-            }
-
-            let forecast =
-                weather::get_forecast(&matching_locations[selection]).unwrap_or_else(|_| {
-                    eprintln!("Error getting the forecast");
-                    process::exit(1);
-                });
-
-            let display = weather::display_forecast(&forecast);
-            println!("{}", display);
+            // let display = weather::display_forecast(&forecast);
+            // println!("{}", display);
         }
     }
 }
