@@ -1,6 +1,7 @@
 mod forecast;
 
 use clap::{Args, Parser, Subcommand};
+use dialoguer::Select;
 use forecast::geolocation;
 use std::process;
 
@@ -33,9 +34,27 @@ fn main() {
                     process::exit(1);
                 });
 
-            for location in matching_locations {
-                println!("{:?}", location);
+            let mut items = Vec::new();
+
+            for location in matching_locations.iter() {
+                let city_state = format!("{}, {}", location.city, location.state);
+                items.push(city_state);
             }
+
+            let mut selection = 0;
+            if matching_locations.len() == 0 {
+                println!("Unable to locate: {}", forecast.city);
+                process::exit(1);
+            } else if matching_locations.len() > 1 {
+                selection = Select::new()
+                    .with_prompt("Multiple cities found please pick one?")
+                    .default(0)
+                    .items(&items)
+                    .interact()
+                    .unwrap();
+            }
+
+            println!("You chose: {:?}", matching_locations[selection]);
         }
     }
 }
