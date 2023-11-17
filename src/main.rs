@@ -20,6 +20,7 @@ enum Commands {
 
 #[derive(Args)]
 struct ForecastArgs {
+    #[arg(short, long)]
     city: String,
 }
 
