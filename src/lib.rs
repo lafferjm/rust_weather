@@ -1,9 +1,8 @@
-mod forecast;
+mod geolocation;
+mod weather;
 
 use std::process;
-
 use clap::{Args, Parser, Subcommand};
-use forecast::{geolocation, weather};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
