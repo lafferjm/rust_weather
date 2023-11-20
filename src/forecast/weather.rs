@@ -36,9 +36,9 @@ fn get_forecast(
     let url = format!("https://api.open-meteo.com/v1/forecast?latitude={}&longitude={}&temperature_unit=fahrenheit&daily=temperature_2m_max,temperature_2m_min",
                       location.latitude, location.longitude,);
 
-    let response = reqwest::blocking::get(&url)?.json::<ForecastResponse>()?;
+    let response = reqwest::blocking::get(url)?.json::<ForecastResponse>()?;
 
-    return Ok(response.daily);
+    Ok(response.daily)
 }
 
 pub fn display_forecast(location: &geolocation::Locations) -> Result<String, Box<dyn error::Error>> {
@@ -55,5 +55,5 @@ pub fn display_forecast(location: &geolocation::Locations) -> Result<String, Box
     })
     .collect();
 
-    return Ok(Table::new(&daily).to_string());
+    Ok(Table::new(daily).to_string())
 }

@@ -1,4 +1,4 @@
-use rust_weather;
+
 
 fn main() {
     let cli = rust_weather::get_args();

@@ -26,14 +26,14 @@ fn get_matching_locations(location: &String) -> Result<Vec<Locations>, Box<dyn e
         location
     );
 
-    let response = reqwest::blocking::get(&url)?.json::<GeolocationResponse>()?;
+    let response = reqwest::blocking::get(url)?.json::<GeolocationResponse>()?;
     let filtered_results = response
         .results
         .into_iter()
         .filter(|loc| loc.city.to_lowercase() == location.to_lowercase())
         .collect();
 
-    return Ok(filtered_results);
+    Ok(filtered_results)
 }
 
 pub fn get_location(forecast: &ForecastArgs) -> Result<Locations, Box<dyn error::Error>> {
@@ -54,5 +54,5 @@ pub fn get_location(forecast: &ForecastArgs) -> Result<Locations, Box<dyn error:
             .interact()?;
     }
 
-    return Ok(matching_locations[selection].clone());
+    Ok(matching_locations[selection].clone())
 }

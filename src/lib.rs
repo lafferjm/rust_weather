@@ -25,9 +25,9 @@ pub struct ForecastArgs {
 }
 
 pub fn get_args() -> Cli {
-    let cli = Cli::parse();
+    
 
-    return cli;
+    Cli::parse()
 }
 
 pub fn run(cli: &Cli) {
